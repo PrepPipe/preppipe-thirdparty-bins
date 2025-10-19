@@ -1,0 +1,32 @@
+name: "Collect Third-party Binaries"
+
+on:
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{ github.token }} # required for gh release
+  RELEASE_TAG: ${{ 'latest' }}
+
+jobs:
+  collect-binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo for gh release
+        uses: actions/checkout@v5
+      - name: Sanity check
+        shell: bash
+        run: |
+          gh release list
+      - name: Download ffmpeg
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "BtbN/FFmpeg-Builds"
+          tag: "latest"
+          fileName: "ffmpeg-master-latest-win64-lgpl-shared.zip"
+          tarBall: false
+          zipBall: false
+          out-file-path: "."
+      - name: Upload all
+        shell: bash
+        run: |
+          gh release upload "${{ env.RELEASE_TAG }}" ffmpeg-master-latest-win64-lgpl-shared.zip --clobber
