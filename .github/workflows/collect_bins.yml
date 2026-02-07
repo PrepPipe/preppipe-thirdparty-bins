@@ -26,7 +26,13 @@ jobs:
           tarBall: false
           zipBall: false
           out-file-path: "."
+      - name: Download renpy sdk
+        shell: bash
+        run: |
+
+          wget "https://www.renpy.org/dl/${{ vars.EMBEDDED_RENPY_VERSION }}/renpy-${{ vars.EMBEDDED_RENPY_VERSION }}-sdk.tar.bz2" -O "renpy-sdk.tar.bz2"
       - name: Upload all
         shell: bash
         run: |
           gh release upload "${{ env.RELEASE_TAG }}" ffmpeg-master-latest-win64-lgpl-shared.zip --clobber
+          gh release upload "${{ env.RELEASE_TAG }}" renpy-sdk.tar.bz2 --clobber
